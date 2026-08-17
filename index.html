@@ -1,0 +1,5570 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StudentHub | Student Productivity System</title>
+
+<style>
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #f4f7fb;
+    color: #172033;
+    transition: 0.3s;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+}
+
+
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    background: linear-gradient(
+        180deg,
+        #172554,
+        #1e3a8a
+    );
+
+    color: white;
+
+    padding: 28px 18px;
+
+    z-index: 1000;
+
+    overflow-y: auto;
+}
+
+.logo {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.logo span {
+    color: #60a5fa;
+}
+
+.tagline {
+    text-align: center;
+    font-size: 11px;
+    color: #bfdbfe;
+    margin-bottom: 30px;
+}
+
+nav a {
+    display: block;
+    color: #dbeafe;
+    text-decoration: none;
+    padding: 12px 14px;
+    margin-bottom: 6px;
+    border-radius: 9px;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+nav a:hover,
+nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+.sidebar-bottom {
+    margin-top: 35px;
+    text-align: center;
+    font-size: 11px;
+    color: #bfdbfe;
+    line-height: 1.8;
+}
+
+
+
+.main {
+    margin-left: 250px;
+    padding: 30px;
+    max-width: 1700px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.welcome {
+    color: #2563eb;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.topbar h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.top-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-btn,
+.theme-btn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    background: white;
+    border-radius: 10px;
+    font-size: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    position: relative;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 7px;
+    height: 7px;
+    background: red;
+    border-radius: 50%;
+}
+
+
+
+.profile-mini {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 6px 10px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.profile-mini:hover {
+    background: #eaf2ff;
+}
+
+.profile-mini small {
+    display: block;
+    color: #64748b;
+    margin-top: 3px;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+
+    overflow: hidden;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.profile-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 5000;
+
+    backdrop-filter: blur(4px);
+}
+
+.profile-overlay.show {
+    display: flex;
+}
+
+.profile-modal {
+    width: 100%;
+    max-width: 720px;
+
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.25);
+
+    animation: profileOpen 0.25s ease;
+}
+
+@keyframes profileOpen {
+
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+.profile-modal-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 22px 25px;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.profile-modal-header h2 {
+    font-size: 21px;
+}
+
+.close-profile {
+    width: 35px;
+    height: 35px;
+
+    border: none;
+
+    background: #f1f5f9;
+
+    border-radius: 8px;
+
+    font-size: 18px;
+
+    color: #475569;
+}
+
+.close-profile:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.profile-modal-body {
+    padding: 25px;
+}
+
+
+/* PROFILE VIEW */
+
+.profile-view {
+    text-align: center;
+}
+
+.profile-view-photo {
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    background: #dbeafe;
+
+    margin: 0 auto 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 42px;
+
+    color: #2563eb;
+
+    overflow: hidden;
+
+    border: 4px solid #eff6ff;
+}
+
+.profile-view-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-view h3 {
+    font-size: 23px;
+    margin-bottom: 5px;
+}
+
+.profile-view-role {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.profile-info-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    text-align: left;
+
+    margin-top: 20px;
+}
+
+.profile-info-item {
+    padding: 13px;
+
+    background: #f8fafc;
+
+    border-radius: 9px;
+
+    border: 1px solid #e2e8f0;
+}
+
+.profile-info-item.full {
+    grid-column: 1 / -1;
+}
+
+.profile-info-item span {
+    display: block;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    margin-bottom: 5px;
+}
+
+.profile-info-item strong {
+    font-size: 13px;
+
+    word-break: break-word;
+}
+
+.profile-about {
+    text-align: left;
+
+    margin-top: 15px;
+
+    padding: 15px;
+
+    background: #eff6ff;
+
+    border-radius: 9px;
+}
+
+.profile-about span {
+    display: block;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    margin-bottom: 6px;
+}
+
+.profile-about p {
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    color: #334155;
+}
+
+.profile-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+
+/* PROFILE EDIT */
+
+.profile-edit {
+    display: none;
+}
+
+.profile-edit.show {
+    display: block;
+}
+
+.profile-view.hide {
+    display: none;
+}
+
+.profile-form {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 12px;
+
+    font-weight: bold;
+
+    color: #475569;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: white;
+
+    color: #172033;
+}
+
+.form-group textarea {
+    resize: vertical;
+
+    min-height: 90px;
+}
+
+.photo-upload-box {
+    text-align: center;
+
+    margin-bottom: 20px;
+}
+
+.edit-photo {
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+
+    margin: 0 auto 10px;
+
+    background: #dbeafe;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    font-size: 35px;
+}
+
+.edit-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.upload-btn {
+    display: inline-block;
+
+    padding: 8px 13px;
+
+    background: #2563eb;
+
+    color: white;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+}
+
+.upload-btn input {
+    display: none;
+}
+
+
+.primary-btn {
+    border: none;
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 11px 15px;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+}
+
+.save-btn {
+    border: none;
+
+    background: #16a34a;
+
+    color: white;
+
+    padding: 11px 18px;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+}
+
+.cancel-btn {
+    border: none;
+
+    background: #e2e8f0;
+
+    color: #334155;
+
+    padding: 11px 18px;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,0.06);
+
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 22px;
+}
+
+.blue {
+    background: #dbeafe;
+}
+
+.green {
+    background: #dcfce7;
+}
+
+.orange {
+    background: #ffedd5;
+}
+
+.purple {
+    background: #f3e8ff;
+}
+
+.stat-card p {
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin-bottom: 5px;
+}
+
+.stat-card h2 {
+    font-size: 25px;
+}
+
+.positive {
+    color: #16a34a;
+
+    font-size: 12px;
+}
+
+
+.card {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 14px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,0.05);
+}
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 22px;
+}
+
+.section-header h2 {
+    font-size: 20px;
+
+    margin-bottom: 5px;
+}
+
+.section-header p {
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.subject-form {
+    display: grid;
+
+    grid-template-columns:
+        1.5fr 1fr .7fr 1.2fr .8fr auto;
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+}
+
+.subject-form input {
+    padding: 11px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    min-width: 0;
+}
+
+.subjects-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.subjects-table th,
+.subjects-table td {
+    padding: 12px 8px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    text-align: left;
+
+    font-size: 13px;
+}
+
+.subjects-table th {
+    color: #475569;
+
+    background: #f8fafc;
+}
+
+.subject-progress {
+    width: 100px;
+
+    height: 7px;
+
+    background: #e2e8f0;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.subject-progress div {
+    height: 100%;
+
+    background: #2563eb;
+}
+
+.action-btn {
+    border: none;
+
+    padding: 6px 9px;
+
+    border-radius: 5px;
+
+    margin-right: 4px;
+
+    font-size: 11px;
+}
+
+.delete-btn {
+    background: #fee2e2;
+
+    color: #dc2626;
+}
+
+.edit-btn {
+    background: #dbeafe;
+
+    color: #2563eb;
+}
+
+
+/* =====================================================
+   ATTENDANCE
+===================================================== */
+
+.attendance-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 50px;
+}
+
+.attendance-circle {
+    width: 150px;
+    height: 150px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #2563eb 0%,
+            #e2e8f0 0%
+        );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    flex-shrink: 0;
+}
+
+.attendance-circle::after {
+    content: "";
+
+    position: absolute;
+
+    width: 115px;
+    height: 115px;
+
+    background: white;
+
+    border-radius: 50%;
+}
+
+.attendance-circle span {
+    position: relative;
+
+    z-index: 2;
+
+    color: #2563eb;
+
+    font-size: 27px;
+
+    font-weight: bold;
+}
+
+.attendance-form {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+.attendance-form input {
+    padding: 11px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    outline: none;
+}
+
+.attendance-info {
+    flex: 1;
+}
+
+.attendance-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 10px 0;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.attendance-row span {
+    color: #64748b;
+}
+
+.attendance-note {
+    margin-top: 15px;
+
+    padding: 12px;
+
+    background: #eff6ff;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    color: #475569;
+}
+
+
+/* =====================================================
+   DAILY PROGRESS
+===================================================== */
+
+.progress-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 25px;
+}
+
+.daily-progress-box {
+    padding: 20px;
+
+    background: #f8fafc;
+
+    border-radius: 12px;
+}
+
+.progress-inputs {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+.progress-inputs label {
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    color: #475569;
+
+    margin-bottom: 6px;
+}
+
+.progress-inputs input {
+    width: 100%;
+
+    padding: 11px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    outline: none;
+}
+
+.big-progress {
+    width: 100%;
+
+    height: 18px;
+
+    background: #e2e8f0;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    margin: 15px 0;
+}
+
+.big-progress-fill {
+    height: 100%;
+
+    width: 0%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #60a5fa
+        );
+
+    transition: .5s;
+}
+
+.progress-percent {
+    text-align: center;
+
+    font-size: 30px;
+
+    font-weight: bold;
+
+    color: #2563eb;
+}
+
+.progress-message {
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin-top: 5px;
+}
+
+.week-progress {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 8px;
+
+    align-items: end;
+
+    height: 190px;
+
+    padding-top: 20px;
+}
+
+.day-progress {
+    text-align: center;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: end;
+}
+
+.day-bar-area {
+    height: 140px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: center;
+}
+
+.day-bar {
+    width: 25px;
+
+    min-height: 4px;
+
+    background: #3b82f6;
+
+    border-radius: 6px 6px 0 0;
+
+    transition: .4s;
+}
+
+.day-progress small {
+    margin-top: 7px;
+
+    color: #64748b;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   TASKS
+===================================================== */
+
+.task-input {
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.task-input input {
+    flex: 1;
+
+    padding: 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 8px;
+
+    outline: none;
+}
+
+#taskList {
+    list-style: none;
+}
+
+#taskList li {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    background: #f8fafc;
+
+    border-left: 4px solid #2563eb;
+
+    border-radius: 8px;
+
+    margin-bottom: 8px;
+}
+
+.task-text {
+    flex: 1;
+}
+
+.task-complete {
+    text-decoration: line-through;
+
+    color: #94a3b8;
+}
+
+.task-check {
+    width: 18px;
+    height: 18px;
+}
+
+
+/* =====================================================
+   CALCULATORS
+===================================================== */
+
+.calculator-info {
+    background: #eff6ff;
+
+    padding: 15px;
+
+    border-radius: 9px;
+
+    margin-bottom: 20px;
+
+    font-size: 13px;
+
+    color: #334155;
+
+    line-height: 1.8;
+}
+
+.calculator-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+}
+
+.calc-box {
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    padding: 18px;
+}
+
+.calc-box h3 {
+    margin-bottom: 15px;
+
+    font-size: 16px;
+}
+
+.grade-row {
+    display: grid;
+
+    grid-template-columns:
+        1.5fr 1fr 1fr;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+}
+
+.grade-row input,
+.semester-row input {
+    padding: 9px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 6px;
+
+    outline: none;
+}
+
+.add-row-btn {
+    margin-top: 8px;
+
+    border: none;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    padding: 8px 12px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+}
+
+.calculate-btn {
+    margin-top: 15px;
+
+    border: none;
+
+    background: #16a34a;
+
+    color: white;
+
+    padding: 11px 16px;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+}
+
+.calc-result {
+    margin-top: 15px;
+
+    padding: 12px;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+
+    border-radius: 7px;
+
+    font-weight: bold;
+}
+
+.semester-row {
+    display: grid;
+
+    grid-template-columns:
+        .8fr 1fr 1fr;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+}
+
+
+/* =====================================================
+   EXAM COUNTDOWN
+===================================================== */
+
+.exam-form {
+    display: grid;
+
+    grid-template-columns:
+        1.5fr 1fr 1fr auto;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+.exam-form input {
+    padding: 11px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    outline: none;
+}
+
+.exam-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.exam-item {
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    padding: 15px;
+
+    background: #f8fafc;
+}
+
+.exam-item h3 {
+    margin-bottom: 5px;
+}
+
+.exam-item p {
+    color: #64748b;
+
+    font-size: 12px;
+
+    margin-bottom: 12px;
+}
+
+.exam-item button {
+    border: none;
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+}
+
+.countdown-title {
+    color: #2563eb;
+
+    margin-bottom: 15px;
+
+    font-size: 17px;
+}
+
+.countdown {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+}
+
+.time-box {
+    background: #eff6ff;
+
+    padding: 25px;
+
+    text-align: center;
+
+    border-radius: 12px;
+}
+
+.time-box strong {
+    display: block;
+
+    color: #2563eb;
+
+    font-size: 30px;
+}
+
+.time-box span {
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   NOTIFICATION
+===================================================== */
+
+.notification {
+    position: fixed;
+
+    right: 25px;
+
+    bottom: 25px;
+
+    background: #172554;
+
+    color: white;
+
+    padding: 14px 18px;
+
+    border-radius: 9px;
+
+    opacity: 0;
+
+    transform: translateY(20px);
+
+    pointer-events: none;
+
+    transition: .3s;
+
+    z-index: 6000;
+}
+
+.notification.show {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+    text-align: center;
+
+    color: #64748b;
+
+    padding: 30px;
+
+    font-size: 12px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+body.dark {
+    background: #0f172a;
+
+    color: #e2e8f0;
+}
+
+body.dark .card,
+body.dark .stat-card,
+body.dark .profile-modal {
+    background: #1e293b;
+
+    color: #e2e8f0;
+}
+
+body.dark .icon-btn,
+body.dark .theme-btn {
+    background: #1e293b;
+
+    color: white;
+}
+
+body.dark .profile-mini:hover {
+    background: #334155;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+    background: #334155;
+
+    color: white;
+
+    border-color: #475569;
+}
+
+body.dark .subtitle,
+body.dark .section-header p,
+body.dark .stat-card p,
+body.dark .profile-mini small,
+body.dark footer {
+    color: #94a3b8;
+}
+
+body.dark .profile-modal-header {
+    border-color: #475569;
+}
+
+body.dark .profile-info-item {
+    background: #334155;
+
+    border-color: #475569;
+}
+
+body.dark .profile-about {
+    background: #334155;
+}
+
+body.dark .profile-about p {
+    color: #cbd5e1;
+}
+
+body.dark .profile-left {
+    border-color: #475569;
+}
+
+body.dark .subjects-table th {
+    background: #334155;
+
+    color: white;
+}
+
+body.dark .subjects-table td {
+    border-color: #475569;
+}
+
+body.dark .attendance-row {
+    border-color: #475569;
+}
+
+body.dark .attendance-circle::after {
+    background: #1e293b;
+}
+
+body.dark .attendance-note,
+body.dark .calculator-info {
+    background: #334155;
+
+    color: #cbd5e1;
+}
+
+body.dark .calc-box {
+    border-color: #475569;
+}
+
+body.dark .calc-result {
+    background: #14532d;
+
+    color: #bbf7d0;
+}
+
+body.dark #taskList li {
+    background: #334155;
+}
+
+body.dark .daily-progress-box {
+    background: #334155;
+}
+
+body.dark .exam-item {
+    background: #334155;
+
+    border-color: #475569;
+}
+
+body.dark .time-box {
+    background: #334155;
+}
+
+body.dark .profile-modal-header {
+    border-bottom-color: #475569;
+}
+
+body.dark .close-profile {
+    background: #334155;
+
+    color: white;
+}
+
+
+@media(max-width:1200px) {
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .subject-form {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .exam-form {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+@media(max-width:900px) {
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+
+        height: auto;
+    }
+
+    nav {
+        display: flex;
+
+        flex-wrap: wrap;
+
+        justify-content: center;
+    }
+
+    nav a {
+        margin: 3px;
+    }
+
+    .sidebar-bottom {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+
+        padding: 20px;
+    }
+
+    .topbar {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+    .attendance-box {
+        flex-direction: column;
+    }
+
+    .calculator-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media(max-width:600px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .countdown {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .profile-form,
+    .profile-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-info-item.full {
+        grid-column: auto;
+    }
+
+    .subject-form {
+        grid-template-columns: 1fr;
+    }
+
+    .exam-form {
+        grid-template-columns: 1fr;
+    }
+
+    .attendance-form {
+        grid-template-columns: 1fr;
+    }
+
+    .task-input {
+        flex-direction: column;
+    }
+
+    .progress-inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-buttons {
+        flex-direction: column;
+    }
+
+    .profile-buttons button {
+        width: 100%;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE PROFILE TOPBAR
+===================================================== */
+
+@media(max-width:500px) {
+
+    .profile-mini div:last-child {
+        display: none;
+    }
+
+    .top-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        Student<span>Hub</span>
+    </div>
+
+    <p class="tagline">
+        Student Productivity System
+    </p>
+
+    <nav>
+
+        <a href="#dashboard" class="active">
+            🏠 Dashboard
+        </a>
+
+        <a href="#subjects">
+            📚 Subjects
+        </a>
+
+        <a href="#attendance">
+            📊 Attendance
+        </a>
+
+        <a href="#progress">
+            📈 Daily Progress
+        </a>
+
+        <a href="#tasks">
+            ✅ Tasks
+        </a>
+
+        <a href="#calculators">
+            🎯 SGPA / CGPA
+        </a>
+
+        <a href="#exam">
+            ⏳ Exam Countdown
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <p>StudentHub V5.0</p>
+
+        <p>HTML • CSS • JavaScript</p>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+<!-- TOP BAR -->
+
+<header class="topbar">
+
+    <div>
+
+        <p class="welcome" id="welcome">
+            Good evening 👋
+        </p>
+
+        <h1 id="dashboard">
+            Welcome back!
+        </h1>
+
+        <p class="subtitle">
+            Manage your complete academic life in one place.
+        </p>
+
+    </div>
+
+
+    <div class="top-actions">
+
+
+        <!-- NOTIFICATION -->
+
+        <button
+            class="icon-btn"
+            onclick="showNotification('🔔 No new notifications!')">
+
+            🔔
+
+            <span class="notification-dot"></span>
+
+        </button>
+
+
+        <!-- DARK MODE -->
+
+        <button
+            class="theme-btn"
+            onclick="toggleDarkMode()">
+
+            🌙
+
+        </button>
+
+
+        <!-- CLICKABLE PROFILE -->
+
+        <div
+            class="profile-mini"
+            onclick="openProfile()"
+            title="Open My Profile">
+
+            <div
+                class="avatar"
+                id="miniAvatar">
+
+                S
+
+            </div>
+
+            <div>
+
+                <strong id="miniName">
+                    Student
+                </strong>
+
+                <small id="miniBranch">
+                    Engineering Student
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<div class="stats-grid">
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon blue">
+            🎯
+        </div>
+
+        <div>
+
+            <p>Current CGPA</p>
+
+            <h2 id="dashboardCGPA">
+                0.00
+            </h2>
+
+            <span class="positive">
+                Academic Performance
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon green">
+            📊
+        </div>
+
+        <div>
+
+            <p>Attendance</p>
+
+            <h2 id="dashboardAttendance">
+                0%
+            </h2>
+
+            <span class="positive">
+                Current Attendance
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon orange">
+            📚
+        </div>
+
+        <div>
+
+            <p>Subjects</p>
+
+            <h2 id="subjectCount">
+                0
+            </h2>
+
+            <span>
+                Active Subjects
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-icon purple">
+            📈
+        </div>
+
+        <div>
+
+            <p>Today's Progress</p>
+
+            <h2 id="dashboardProgress">
+                0%
+            </h2>
+
+            <span>
+                Study Target
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SUBJECTS
+===================================================== -->
+
+<section
+    class="card"
+    id="subjects">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                📚 Subject Management
+            </h2>
+
+            <p>
+                Add and manage your subjects.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="subject-form">
+
+        <input
+            id="subjectName"
+            type="text"
+            placeholder="Subject name">
+
+        <input
+            id="subjectCode"
+            type="text"
+            placeholder="Subject code">
+
+        <input
+            id="subjectCredits"
+            type="number"
+            placeholder="Credits"
+            min="1">
+
+        <input
+            id="subjectFaculty"
+            type="text"
+            placeholder="Faculty name">
+
+        <input
+            id="subjectProgress"
+            type="number"
+            placeholder="Progress %"
+            min="0"
+            max="100">
+
+        <button
+            class="primary-btn"
+            onclick="addSubject()">
+
+            + Add
+
+        </button>
+
+    </div>
+
+
+    <div style="overflow-x:auto;">
+
+        <table class="subjects-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Subject</th>
+                    <th>Code</th>
+                    <th>Credits</th>
+                    <th>Faculty</th>
+                    <th>Progress</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="subjectTable"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ATTENDANCE
+===================================================== -->
+
+<section
+    class="card"
+    id="attendance">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                📊 Attendance Calculator
+            </h2>
+
+            <p>
+                Calculate your current attendance.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="attendance-box">
+
+
+        <div
+            class="attendance-circle"
+            id="attendanceCircle">
+
+            <span id="attendancePercentage">
+                0%
+            </span>
+
+        </div>
+
+
+        <div class="attendance-info">
+
+
+            <div class="attendance-form">
+
+                <input
+                    id="presentClasses"
+                    type="number"
+                    placeholder="Present classes"
+                    min="0">
+
+                <input
+                    id="totalClasses"
+                    type="number"
+                    placeholder="Total classes"
+                    min="0">
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="calculateAttendance()">
+
+                Calculate Attendance
+
+            </button>
+
+
+            <div class="attendance-row">
+
+                <span>Present Classes</span>
+
+                <strong id="presentDisplay">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="attendance-row">
+
+                <span>Total Classes</span>
+
+                <strong id="totalDisplay">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="attendance-row">
+
+                <span>Absent Classes</span>
+
+                <strong id="absentDisplay">
+                    0
+                </strong>
+
+            </div>
+
+
+            <p
+                class="attendance-note"
+                id="attendanceMessage">
+
+                Enter your attendance details.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     DAILY PROGRESS
+===================================================== -->
+
+<section
+    class="card"
+    id="progress">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                📈 Daily Study Progress
+            </h2>
+
+            <p>
+                Improve your progress every day by tracking your study hours.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="progress-grid">
+
+
+        <div class="daily-progress-box">
+
+            <h3>
+                🎯 Today's Progress
+            </h3>
+
+            <br>
+
+
+            <div class="progress-inputs">
+
+                <div>
+
+                    <label>
+                        Daily Target (Hours)
+                    </label>
+
+                    <input
+                        id="dailyTarget"
+                        type="number"
+                        min="0.5"
+                        step="0.5"
+                        placeholder="Example: 6">
+
+                </div>
+
+
+                <div>
+
+                    <label>
+                        Study Hours Today
+                    </label>
+
+                    <input
+                        id="todayHours"
+                        type="number"
+                        min="0"
+                        step="0.5"
+                        placeholder="Example: 4">
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="primary-btn"
+                onclick="saveDailyProgress()">
+
+                💾 Save Today's Progress
+
+            </button>
+
+
+            <div class="big-progress">
+
+                <div
+                    class="big-progress-fill"
+                    id="bigProgressFill">
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="progress-percent"
+                id="todayProgressPercent">
+
+                0%
+
+            </div>
+
+
+            <p
+                class="progress-message"
+                id="progressMessage">
+
+                Start studying and track your progress!
+
+            </p>
+
+        </div>
+
+
+        <div class="daily-progress-box">
+
+            <h3>
+                📅 Last 7 Days
+            </h3>
+
+            <br>
+
+            <div
+                class="week-progress"
+                id="weekProgress">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     TASKS
+===================================================== -->
+
+<section
+    class="card"
+    id="tasks">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                ✅ Task Manager
+            </h2>
+
+            <p>
+                Manage assignments and academic work.
+            </p>
+
+        </div>
+
+        <strong>
+            Pending:
+            <span id="taskCount">
+                0
+            </span>
+        </strong>
+
+    </div>
+
+
+    <div class="task-input">
+
+        <input
+            id="taskInput"
+            type="text"
+            placeholder="Example: Complete DBMS assignment">
+
+        <button
+            class="primary-btn"
+            onclick="addTask()">
+
+            + Add Task
+
+        </button>
+
+    </div>
+
+
+    <ul id="taskList"></ul>
+
+</section>
+
+
+
+<!-- =====================================================
+     SGPA / CGPA
+===================================================== -->
+
+<section
+    class="card"
+    id="calculators">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                🎯 SGPA & CGPA Calculator
+            </h2>
+
+            <p>
+                Credit-weighted academic calculation.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="calculator-info">
+
+        <strong>SGPA Formula:</strong>
+
+        SGPA =
+        Σ(Credit × Grade Point)
+        ÷
+        Σ(Credits)
+
+        <br>
+
+        <strong>CGPA Formula:</strong>
+
+        CGPA =
+        Σ(SGPA × Semester Credits)
+        ÷
+        Σ(Semester Credits)
+
+    </div>
+
+
+    <div class="calculator-grid">
+
+
+        <!-- SGPA -->
+
+        <div class="calc-box">
+
+            <h3>
+                📘 SGPA Calculator
+            </h3>
+
+
+            <div id="gradeRows">
+
+                <div class="grade-row">
+
+                    <input placeholder="Subject">
+
+                    <input
+                        class="credit"
+                        type="number"
+                        placeholder="Credit"
+                        min="0">
+
+                    <input
+                        class="grade"
+                        type="number"
+                        placeholder="Grade Point"
+                        min="0"
+                        max="10">
+
+                </div>
+
+
+                <div class="grade-row">
+
+                    <input placeholder="Subject">
+
+                    <input
+                        class="credit"
+                        type="number"
+                        placeholder="Credit"
+                        min="0">
+
+                    <input
+                        class="grade"
+                        type="number"
+                        placeholder="Grade Point"
+                        min="0"
+                        max="10">
+
+                </div>
+
+
+                <div class="grade-row">
+
+                    <input placeholder="Subject">
+
+                    <input
+                        class="credit"
+                        type="number"
+                        placeholder="Credit"
+                        min="0">
+
+                    <input
+                        class="grade"
+                        type="number"
+                        placeholder="Grade Point"
+                        min="0"
+                        max="10">
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="add-row-btn"
+                onclick="addGradeRow()">
+
+                + Add Subject
+
+            </button>
+
+            <br>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculateSGPA()">
+
+                Calculate SGPA
+
+            </button>
+
+
+            <div
+                class="calc-result"
+                id="sgpaResult">
+
+                SGPA: --
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CGPA -->
+
+        <div class="calc-box">
+
+            <h3>
+                🏆 CGPA Calculator
+            </h3>
+
+            <p
+                style="font-size:12px;
+                color:#64748b;
+                margin-bottom:12px;">
+
+                Enter each semester's SGPA and total credits.
+
+            </p>
+
+
+            <div id="semesterRows">
+
+                <div class="semester-row">
+
+                    <input
+                        type="number"
+                        placeholder="Sem">
+
+                    <input
+                        type="number"
+                        class="semSGPA"
+                        placeholder="SGPA"
+                        min="0"
+                        max="10">
+
+                    <input
+                        type="number"
+                        class="semCredits"
+                        placeholder="Credits"
+                        min="0">
+
+                </div>
+
+
+                <div class="semester-row">
+
+                    <input
+                        type="number"
+                        placeholder="Sem">
+
+                    <input
+                        type="number"
+                        class="semSGPA"
+                        placeholder="SGPA"
+                        min="0"
+                        max="10">
+
+                    <input
+                        type="number"
+                        class="semCredits"
+                        placeholder="Credits"
+                        min="0">
+
+                </div>
+
+
+                <div class="semester-row">
+
+                    <input
+                        type="number"
+                        placeholder="Sem">
+
+                    <input
+                        type="number"
+                        class="semSGPA"
+                        placeholder="SGPA"
+                        min="0"
+                        max="10">
+
+                    <input
+                        type="number"
+                        class="semCredits"
+                        placeholder="Credits"
+                        min="0">
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="add-row-btn"
+                onclick="addSemesterRow()">
+
+                + Add Semester
+
+            </button>
+
+            <br>
+
+
+            <button
+                class="calculate-btn"
+                onclick="calculateCGPA()">
+
+                Calculate CGPA
+
+            </button>
+
+
+            <div
+                class="calc-result"
+                id="cgpaResult">
+
+                CGPA: --
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     EXAM COUNTDOWN
+===================================================== -->
+
+<section
+    class="card"
+    id="exam">
+
+    <div class="section-header">
+
+        <div>
+
+            <h2>
+                ⏳ Exam Countdown
+            </h2>
+
+            <p>
+                Add your examination and StudentHub will automatically count down to it.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="exam-form">
+
+        <input
+            id="examName"
+            type="text"
+            placeholder="Exam name e.g. MID-2">
+
+        <input
+            id="examDate"
+            type="date">
+
+        <input
+            id="examTime"
+            type="time">
+
+        <button
+            class="primary-btn"
+            onclick="addExam()">
+
+            + Add Exam
+
+        </button>
+
+    </div>
+
+
+    <div
+        class="exam-list"
+        id="examList">
+
+    </div>
+
+
+    <div
+        id="activeExamSection"
+        style="display:none;">
+
+        <h3
+            class="countdown-title"
+            id="activeExamTitle">
+
+            Upcoming Exam
+
+        </h3>
+
+
+        <div class="countdown">
+
+            <div class="time-box">
+
+                <strong id="days">00</strong>
+
+                <span>Days</span>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <strong id="hours">00</strong>
+
+                <span>Hours</span>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <strong id="minutes">00</strong>
+
+                <span>Minutes</span>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <strong id="seconds">00</strong>
+
+                <span>Seconds</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <strong>StudentHub</strong>
+
+    <p>
+        Student Productivity & Academic Management System
+    </p>
+
+    <p>
+        Built with HTML • CSS • JavaScript
+    </p>
+
+    <p>
+        Version 5.0
+    </p>
+
+</footer>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     PROFILE MODAL
+===================================================== -->
+
+<div
+    class="profile-overlay"
+    id="profileOverlay"
+    onclick="closeProfileOutside(event)">
+
+
+    <div class="profile-modal">
+
+
+        <div class="profile-modal-header">
+
+            <h2>
+                👤 My Profile
+            </h2>
+
+            <button
+                class="close-profile"
+                onclick="closeProfile()">
+
+                ✕
+
+            </button>
+
+        </div>
+
+
+        <div class="profile-modal-body">
+
+
+            <!-- PROFILE VIEW -->
+
+            <div
+                class="profile-view"
+                id="profileView">
+
+
+                <div
+                    class="profile-view-photo"
+                    id="profileViewPhoto">
+
+                    👤
+
+                </div>
+
+
+                <h3 id="viewName">
+                    Student
+                </h3>
+
+
+                <p
+                    class="profile-view-role"
+                    id="viewBranch">
+
+                    Engineering Student
+
+                </p>
+
+
+                <div class="profile-info-grid">
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Roll Number
+                        </span>
+
+                        <strong id="viewRoll">
+                            Not added
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong id="viewEmail">
+                            Not added
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Phone
+                        </span>
+
+                        <strong id="viewPhone">
+                            Not added
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            College / University
+                        </span>
+
+                        <strong id="viewCollege">
+                            Not added
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Branch
+                        </span>
+
+                        <strong id="viewBranchInfo">
+                            Not added
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Semester
+                        </span>
+
+                        <strong id="viewSemester">
+                            Not added
+                        </strong>
+
+                    </div>
+
+
+                    <div class="profile-info-item">
+
+                        <span>
+                            Admission Year
+                        </span>
+
+                        <strong id="viewYear">
+                            Not added
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-about">
+
+                    <span>
+                        About Me
+                    </span>
+
+                    <p id="viewBio">
+                        No information added yet.
+                    </p>
+
+                </div>
+
+
+                <div class="profile-buttons">
+
+                    <button
+                        class="primary-btn"
+                        onclick="showEditProfile()">
+
+                        ✏️ Edit Profile
+
+                    </button>
+
+
+                    <button
+                        class="cancel-btn"
+                        onclick="closeProfile()">
+
+                        Close
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PROFILE EDIT -->
+
+            <div
+                class="profile-edit"
+                id="profileEdit">
+
+
+                <div class="photo-upload-box">
+
+                    <div
+                        class="edit-photo"
+                        id="editPhoto">
+
+                        👤
+
+                    </div>
+
+
+                    <label class="upload-btn">
+
+                        📷 Change Photo
+
+                        <input
+                            type="file"
+                            id="photoInput"
+                            accept="image/*">
+
+                    </label>
+
+                </div>
+
+
+                <div class="profile-form">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Full Name
+                        </label>
+
+                        <input
+                            id="profileName"
+                            type="text"
+                            placeholder="Your full name">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Roll Number
+                        </label>
+
+                        <input
+                            id="profileRoll"
+                            type="text"
+                            placeholder="Your roll number">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            id="profileEmail"
+                            type="email"
+                            placeholder="Your email">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Phone
+                        </label>
+
+                        <input
+                            id="profilePhone"
+                            type="tel"
+                            placeholder="Your phone number">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            College / University
+                        </label>
+
+                        <input
+                            id="profileCollege"
+                            type="text"
+                            placeholder="College name">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Branch
+                        </label>
+
+                        <input
+                            id="profileBranch"
+                            type="text"
+                            placeholder="Information Technology">
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Semester
+                        </label>
+
+                        <select id="profileSemester">
+
+                            <option value="">
+                                Select Semester
+                            </option>
+
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Admission Year
+                        </label>
+
+                        <input
+                            id="profileYear"
+                            type="number"
+                            placeholder="2024">
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            About Me
+                        </label>
+
+                        <textarea
+                            id="profileBio"
+                            placeholder="Write something about yourself..."></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-buttons">
+
+                    <button
+                        class="save-btn"
+                        onclick="saveProfile()">
+
+                        💾 Save Profile
+
+                    </button>
+
+
+                    <button
+                        class="cancel-btn"
+                        onclick="cancelEditProfile()">
+
+                        Cancel
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- NOTIFICATION -->
+
+<div
+    class="notification"
+    id="notification">
+
+    Notification
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   NOTIFICATION
+===================================================== */
+
+function showNotification(message) {
+
+    const box =
+        document.getElementById("notification");
+
+    box.innerText = message;
+
+    box.classList.add("show");
+
+    setTimeout(function() {
+
+        box.classList.remove("show");
+
+    }, 3000);
+
+}
+
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "studentHubTheme",
+        document.body.classList.contains("dark")
+        ? "dark"
+        : "light"
+    );
+
+}
+
+if (
+    localStorage.getItem("studentHubTheme")
+    === "dark"
+) {
+
+    document.body.classList.add("dark");
+
+}
+
+
+/* =====================================================
+   PROFILE DATA
+===================================================== */
+
+let profile =
+    JSON.parse(
+        localStorage.getItem(
+            "studentHubProfile"
+        )
+    ) || {};
+
+
+/* =====================================================
+   OPEN PROFILE
+===================================================== */
+
+function openProfile() {
+
+    updateProfileView();
+
+    document
+        .getElementById("profileOverlay")
+        .classList.add("show");
+
+    document
+        .getElementById("profileView")
+        .classList.remove("hide");
+
+    document
+        .getElementById("profileEdit")
+        .classList.remove("show");
+
+}
+
+
+/* =====================================================
+   CLOSE PROFILE
+===================================================== */
+
+function closeProfile() {
+
+    document
+        .getElementById("profileOverlay")
+        .classList.remove("show");
+
+}
+
+
+function closeProfileOutside(event) {
+
+    if (
+        event.target ===
+        document.getElementById(
+            "profileOverlay"
+        )
+    ) {
+
+        closeProfile();
+
+    }
+
+}
+
+
+/* =====================================================
+   SHOW EDIT PROFILE
+===================================================== */
+
+function showEditProfile() {
+
+    loadProfileFields();
+
+    document
+        .getElementById("profileView")
+        .classList.add("hide");
+
+    document
+        .getElementById("profileEdit")
+        .classList.add("show");
+
+}
+
+
+/* =====================================================
+   CANCEL EDIT
+===================================================== */
+
+function cancelEditProfile() {
+
+    document
+        .getElementById("profileEdit")
+        .classList.remove("show");
+
+    document
+        .getElementById("profileView")
+        .classList.remove("hide");
+
+    updateProfileView();
+
+}
+
+
+/* =====================================================
+   LOAD PROFILE FIELDS
+===================================================== */
+
+function loadProfileFields() {
+
+    document.getElementById(
+        "profileName"
+    ).value =
+        profile.name || "";
+
+    document.getElementById(
+        "profileRoll"
+    ).value =
+        profile.roll || "";
+
+    document.getElementById(
+        "profileEmail"
+    ).value =
+        profile.email || "";
+
+    document.getElementById(
+        "profilePhone"
+    ).value =
+        profile.phone || "";
+
+    document.getElementById(
+        "profileCollege"
+    ).value =
+        profile.college || "";
+
+    document.getElementById(
+        "profileBranch"
+    ).value =
+        profile.branch || "";
+
+    document.getElementById(
+        "profileSemester"
+    ).value =
+        profile.semester || "";
+
+    document.getElementById(
+        "profileYear"
+    ).value =
+        profile.year || "";
+
+    document.getElementById(
+        "profileBio"
+    ).value =
+        profile.bio || "";
+
+
+    updateEditPhoto();
+
+}
+
+
+/* =====================================================
+   UPDATE EDIT PHOTO
+===================================================== */
+
+function updateEditPhoto() {
+
+    const photo =
+        document.getElementById(
+            "editPhoto"
+        );
+
+
+    if (profile.photo) {
+
+        photo.innerHTML =
+            `<img src="${profile.photo}">`;
+
+    }
+
+    else {
+
+        photo.innerText =
+            "👤";
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE PROFILE
+===================================================== */
+
+function saveProfile() {
+
+    profile = {
+
+        name:
+            document.getElementById(
+                "profileName"
+            ).value.trim(),
+
+        roll:
+            document.getElementById(
+                "profileRoll"
+            ).value.trim(),
+
+        email:
+            document.getElementById(
+                "profileEmail"
+            ).value.trim(),
+
+        phone:
+            document.getElementById(
+                "profilePhone"
+            ).value.trim(),
+
+        college:
+            document.getElementById(
+                "profileCollege"
+            ).value.trim(),
+
+        branch:
+            document.getElementById(
+                "profileBranch"
+            ).value.trim(),
+
+        semester:
+            document.getElementById(
+                "profileSemester"
+            ).value,
+
+        year:
+            document.getElementById(
+                "profileYear"
+            ).value,
+
+        bio:
+            document.getElementById(
+                "profileBio"
+            ).value.trim(),
+
+        photo:
+            profile.photo || ""
+
+    };
+
+
+    localStorage.setItem(
+        "studentHubProfile",
+        JSON.stringify(profile)
+    );
+
+
+    updateProfileView();
+
+    updateTopProfile();
+
+
+    document
+        .getElementById("profileEdit")
+        .classList.remove("show");
+
+    document
+        .getElementById("profileView")
+        .classList.remove("hide");
+
+
+    showNotification(
+        "✅ Profile saved successfully!"
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE PROFILE VIEW
+===================================================== */
+
+function updateProfileView() {
+
+    const name =
+        profile.name ||
+        "Student";
+
+
+    const branch =
+        profile.branch ||
+        "Engineering Student";
+
+
+    document.getElementById(
+        "viewName"
+    ).innerText =
+        name;
+
+
+    document.getElementById(
+        "viewBranch"
+    ).innerText =
+        branch;
+
+
+    document.getElementById(
+        "viewRoll"
+    ).innerText =
+        profile.roll ||
+        "Not added";
+
+
+    document.getElementById(
+        "viewEmail"
+    ).innerText =
+        profile.email ||
+        "Not added";
+
+
+    document.getElementById(
+        "viewPhone"
+    ).innerText =
+        profile.phone ||
+        "Not added";
+
+
+    document.getElementById(
+        "viewCollege"
+    ).innerText =
+        profile.college ||
+        "Not added";
+
+
+    document.getElementById(
+        "viewBranchInfo"
+    ).innerText =
+        profile.branch ||
+        "Not added";
+
+
+    document.getElementById(
+        "viewSemester"
+    ).innerText =
+        profile.semester
+        ? "Semester " +
+          profile.semester
+        : "Not added";
+
+
+    document.getElementById(
+        "viewYear"
+    ).innerText =
+        profile.year ||
+        "Not added";
+
+
+    document.getElementById(
+        "viewBio"
+    ).innerText =
+        profile.bio ||
+        "No information added yet.";
+
+
+    const photo =
+        document.getElementById(
+            "profileViewPhoto"
+        );
+
+
+    if (profile.photo) {
+
+        photo.innerHTML =
+            `<img src="${profile.photo}">`;
+
+    }
+
+    else {
+
+        photo.innerText =
+            "👤";
+
+    }
+
+}
+
+
+/* =====================================================
+   UPDATE TOP PROFILE
+===================================================== */
+
+function updateTopProfile() {
+
+    const name =
+        profile.name ||
+        "Student";
+
+
+    const branch =
+        profile.branch ||
+        "Engineering Student";
+
+
+    document.getElementById(
+        "miniName"
+    ).innerText =
+        name;
+
+
+    document.getElementById(
+        "miniBranch"
+    ).innerText =
+        branch;
+
+
+    document.getElementById(
+        "miniAvatar"
+    ).innerHTML =
+        profile.photo
+        ? `<img src="${profile.photo}">`
+        : name.charAt(0).toUpperCase();
+
+
+    document.querySelector(
+        ".topbar h1"
+    ).innerText =
+        "Welcome back, "
+        +
+        name.split(" ")[0]
+        +
+        "!";
+
+}
+
+
+document
+    .getElementById("photoInput")
+    .addEventListener(
+        "change",
+        function(event) {
+
+            const file =
+                event.target.files[0];
+
+            if (!file) return;
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function(e) {
+
+                    profile.photo =
+                        e.target.result;
+
+                    updateEditPhoto();
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+
+updateTopProfile();
+
+
+/* =====================================================
+   SUBJECTS
+===================================================== */
+
+let subjects =
+    JSON.parse(
+        localStorage.getItem(
+            "studentHubSubjects"
+        )
+    ) || [];
+
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function displaySubjects() {
+
+    const table =
+        document.getElementById(
+            "subjectTable"
+        );
+
+    table.innerHTML = "";
+
+
+    subjects.forEach(
+        function(subject, index) {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${escapeHTML(subject.name)}
+                    </strong>
+                </td>
+
+                <td>
+                    ${escapeHTML(subject.code)}
+                </td>
+
+                <td>
+                    ${subject.credits}
+                </td>
+
+                <td>
+                    ${escapeHTML(subject.faculty)}
+                </td>
+
+                <td>
+
+                    <div
+                        style="display:flex;
+                        align-items:center;
+                        gap:8px;">
+
+                        <div class="subject-progress">
+
+                            <div
+                                style="width:${subject.progress}%">
+                            </div>
+
+                        </div>
+
+                        ${subject.progress}%
+
+                    </div>
+
+                </td>
+
+                <td>
+
+                    <button
+                        class="action-btn edit-btn"
+                        onclick="editSubject(${index})">
+
+                        Edit
+
+                    </button>
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteSubject(${index})">
+
+                        Delete
+
+                    </button>
+
+                </td>
+
+            `;
+
+            table.appendChild(row);
+
+        }
+    );
+
+
+    document.getElementById(
+        "subjectCount"
+    ).innerText =
+        subjects.length;
+
+}
+
+
+function addSubject() {
+
+    const name =
+        document.getElementById(
+            "subjectName"
+        ).value.trim();
+
+
+    const code =
+        document.getElementById(
+            "subjectCode"
+        ).value.trim();
+
+
+    const credits =
+        Number(
+            document.getElementById(
+                "subjectCredits"
+            ).value
+        );
+
+
+    const faculty =
+        document.getElementById(
+            "subjectFaculty"
+        ).value.trim();
+
+
+    const progress =
+        Number(
+            document.getElementById(
+                "subjectProgress"
+            ).value
+        );
+
+
+    if (
+        !name ||
+        !code ||
+        credits <= 0 ||
+        !faculty ||
+        progress < 0 ||
+        progress > 100
+    ) {
+
+        showNotification(
+            "⚠️ Please enter valid subject details."
+        );
+
+        return;
+
+    }
+
+
+    subjects.push({
+
+        name,
+        code,
+        credits,
+        faculty,
+        progress
+
+    });
+
+
+    localStorage.setItem(
+        "studentHubSubjects",
+        JSON.stringify(subjects)
+    );
+
+
+    displaySubjects();
+
+
+    document.getElementById(
+        "subjectName"
+    ).value = "";
+
+    document.getElementById(
+        "subjectCode"
+    ).value = "";
+
+    document.getElementById(
+        "subjectCredits"
+    ).value = "";
+
+    document.getElementById(
+        "subjectFaculty"
+    ).value = "";
+
+    document.getElementById(
+        "subjectProgress"
+    ).value = "";
+
+
+    showNotification(
+        "📚 Subject added!"
+    );
+
+}
+
+
+function editSubject(index) {
+
+    const s =
+        subjects[index];
+
+
+    const name =
+        prompt(
+            "Subject Name:",
+            s.name
+        );
+
+    if (name === null) return;
+
+
+    const code =
+        prompt(
+            "Subject Code:",
+            s.code
+        );
+
+    if (code === null) return;
+
+
+    const credits =
+        Number(
+            prompt(
+                "Credits:",
+                s.credits
+            )
+        );
+
+
+    const faculty =
+        prompt(
+            "Faculty:",
+            s.faculty
+        );
+
+    if (faculty === null) return;
+
+
+    const progress =
+        Number(
+            prompt(
+                "Progress %:",
+                s.progress
+            )
+        );
+
+
+    if (
+        !name ||
+        !code ||
+        credits <= 0 ||
+        !faculty ||
+        progress < 0 ||
+        progress > 100
+    ) {
+
+        showNotification(
+            "⚠️ Invalid details."
+        );
+
+        return;
+
+    }
+
+
+    subjects[index] = {
+
+        name,
+        code,
+        credits,
+        faculty,
+        progress
+
+    };
+
+
+    localStorage.setItem(
+        "studentHubSubjects",
+        JSON.stringify(subjects)
+    );
+
+
+    displaySubjects();
+
+    showNotification(
+        "✏️ Subject updated!"
+    );
+
+}
+
+
+function deleteSubject(index) {
+
+    if (
+        !confirm(
+            "Delete this subject?"
+        )
+    ) return;
+
+
+    subjects.splice(index, 1);
+
+
+    localStorage.setItem(
+        "studentHubSubjects",
+        JSON.stringify(subjects)
+    );
+
+
+    displaySubjects();
+
+    showNotification(
+        "🗑️ Subject deleted!"
+    );
+
+}
+
+
+displaySubjects();
+
+
+/* =====================================================
+   ATTENDANCE
+===================================================== */
+
+let attendance =
+    JSON.parse(
+        localStorage.getItem(
+            "studentHubAttendance"
+        )
+    ) || {
+
+        present: 0,
+        total: 0
+
+    };
+
+
+function calculateAttendance() {
+
+    const present =
+        Number(
+            document.getElementById(
+                "presentClasses"
+            ).value
+        );
+
+
+    const total =
+        Number(
+            document.getElementById(
+                "totalClasses"
+            ).value
+        );
+
+
+    if (
+        present < 0 ||
+        total <= 0 ||
+        present > total
+    ) {
+
+        showNotification(
+            "⚠️ Invalid attendance."
+        );
+
+        return;
+
+    }
+
+
+    attendance.present =
+        present;
+
+    attendance.total =
+        total;
+
+
+    localStorage.setItem(
+        "studentHubAttendance",
+        JSON.stringify(attendance)
+    );
+
+
+    updateAttendance();
+
+}
+
+
+function updateAttendance() {
+
+    const present =
+        attendance.present;
+
+    const total =
+        attendance.total;
+
+
+    if (total <= 0) return;
+
+
+    const percentage =
+        present /
+        total *
+        100;
+
+
+    const absent =
+        total -
+        present;
+
+
+    document.getElementById(
+        "attendancePercentage"
+    ).innerText =
+        percentage.toFixed(1)
+        + "%";
+
+
+    document.getElementById(
+        "dashboardAttendance"
+    ).innerText =
+        percentage.toFixed(1)
+        + "%";
+
+
+    document.getElementById(
+        "presentDisplay"
+    ).innerText =
+        present;
+
+
+    document.getElementById(
+        "totalDisplay"
+    ).innerText =
+        total;
+
+
+    document.getElementById(
+        "absentDisplay"
+    ).innerText =
+        absent;
+
+
+    document.getElementById(
+        "presentClasses"
+    ).value =
+        present;
+
+
+    document.getElementById(
+        "totalClasses"
+    ).value =
+        total;
+
+
+    document.getElementById(
+        "attendanceCircle"
+    ).style.background =
+        `conic-gradient(
+            #2563eb ${percentage}%,
+            #e2e8f0 ${percentage}%
+        )`;
+
+
+    const message =
+        document.getElementById(
+            "attendanceMessage"
+        );
+
+
+    if (percentage >= 75) {
+
+        const canMiss =
+            Math.floor(
+                present /
+                0.75 -
+                total
+            );
+
+
+        message.innerHTML =
+            "✅ You can miss approximately "
+            +
+            "<strong>"
+            +
+            Math.max(0, canMiss)
+            +
+            " more classes</strong> "
+            +
+            "while remaining at or above 75%.";
+
+    }
+
+    else {
+
+        const needed =
+            Math.ceil(
+                (
+                    0.75 *
+                    total -
+                    present
+                )
+                /
+                0.25
+            );
+
+
+        message.innerHTML =
+            "⚠️ You need approximately "
+            +
+            "<strong>"
+            +
+            Math.max(0, needed)
+            +
+            " consecutive present classes</strong> "
+            +
+            "to reach 75%.";
+
+    }
+
+}
+
+
+if (attendance.total > 0) {
+
+    updateAttendance();
+
+}
+
+
+/* =====================================================
+   DAILY PROGRESS
+===================================================== */
+
+let progressData =
+    JSON.parse(
+        localStorage.getItem(
+            "studentHubDailyProgress"
+        )
+    ) || {};
+
+
+let dailyTarget =
+    Number(
+        localStorage.getItem(
+            "studentHubDailyTarget"
+        )
+    ) || 6;
+
+
+document.getElementById(
+    "dailyTarget"
+).value =
+    dailyTarget;
+
+
+function getDateKey(date) {
+
+    return date
+        .toISOString()
+        .split("T")[0];
+
+}
+
+
+function saveDailyProgress() {
+
+    const target =
+        Number(
+            document.getElementById(
+                "dailyTarget"
+            ).value
+        );
+
+
+    const hours =
+        Number(
+            document.getElementById(
+                "todayHours"
+            ).value
+        );
+
+
+    if (
+        target <= 0 ||
+        hours < 0
+    ) {
+
+        showNotification(
+            "⚠️ Enter valid study hours."
+        );
+
+        return;
+
+    }
+
+
+    dailyTarget =
+        target;
+
+
+    localStorage.setItem(
+        "studentHubDailyTarget",
+        dailyTarget
+    );
+
+
+    const today =
+        getDateKey(
+            new Date()
+        );
+
+
+    progressData[today] =
+        hours;
+
+
+    localStorage.setItem(
+        "studentHubDailyProgress",
+        JSON.stringify(
+            progressData
+        )
+    );
+
+
+    updateTodayProgress();
+
+    displayWeekProgress();
+
+
+    showNotification(
+        "📈 Today's progress saved!"
+    );
+
+}
+
+
+function updateTodayProgress() {
+
+    const today =
+        getDateKey(
+            new Date()
+        );
+
+
+    const hours =
+        Number(
+            progressData[today]
+        ) || 0;
+
+
+    const percentage =
+        Math.min(
+            100,
+            hours /
+            dailyTarget *
+            100
+        );
+
+
+    document.getElementById(
+        "todayHours"
+    ).value =
+        hours;
+
+
+    document.getElementById(
+        "dailyTarget"
+    ).value =
+        dailyTarget;
+
+
+    document.getElementById(
+        "todayProgressPercent"
+    ).innerText =
+        percentage.toFixed(0)
+        + "%";
+
+
+    document.getElementById(
+        "dashboardProgress"
+    ).innerText =
+        percentage.toFixed(0)
+        + "%";
+
+
+    document.getElementById(
+        "bigProgressFill"
+    ).style.width =
+        percentage
+        + "%";
+
+
+    const message =
+        document.getElementById(
+            "progressMessage"
+        );
+
+
+    if (hours === 0) {
+
+        message.innerText =
+            "Start studying and track your progress!";
+
+    }
+
+    else if (percentage < 50) {
+
+        message.innerText =
+            "💪 Keep going! You are building momentum.";
+
+    }
+
+    else if (percentage < 100) {
+
+        message.innerText =
+            "🔥 Great work! Keep pushing toward your target.";
+
+    }
+
+    else {
+
+        message.innerText =
+            "🏆 Daily target completed! Excellent work.";
+
+    }
+
+}
+
+
+function displayWeekProgress() {
+
+    const container =
+        document.getElementById(
+            "weekProgress"
+        );
+
+
+    container.innerHTML = "";
+
+
+    for (
+        let i = 6;
+        i >= 0;
+        i--
+    ) {
+
+        const date =
+            new Date();
+
+
+        date.setDate(
+            date.getDate() -
+            i
+        );
+
+
+        const key =
+            getDateKey(date);
+
+
+        const hours =
+            Number(
+                progressData[key]
+            ) || 0;
+
+
+        const percentage =
+            Math.min(
+                100,
+                hours /
+                dailyTarget *
+                100
+            );
+
+
+        const day =
+            document.createElement(
+                "div"
+            );
+
+
+        day.className =
+            "day-progress";
+
+
+        day.innerHTML = `
+
+            <div class="day-bar-area">
+
+                <div
+                    class="day-bar"
+                    style="height:${Math.max(
+                        4,
+                        percentage
+                    )}%"
+                    title="${hours} hours">
+
+                </div>
+
+            </div>
+
+            <small>
+                ${date.toLocaleDateString(
+                    "en-US",
+                    {
+                        weekday: "short"
+                    }
+                )}
+            </small>
+
+        `;
+
+
+        container.appendChild(day);
+
+    }
+
+}
+
+
+updateTodayProgress();
+
+displayWeekProgress();
+
+
+/* =====================================================
+   TASKS
+===================================================== */
+
+let tasks =
+    JSON.parse(
+        localStorage.getItem(
+            "studentHubTasks"
+        )
+    ) || [];
+
+
+function displayTasks() {
+
+    const list =
+        document.getElementById(
+            "taskList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    tasks.forEach(
+        function(task, index) {
+
+            const li =
+                document.createElement(
+                    "li"
+                );
+
+
+            li.innerHTML = `
+
+                <input
+                    type="checkbox"
+                    class="task-check"
+                    ${task.completed
+                        ? "checked"
+                        : ""}
+                    onchange="toggleTask(${index})">
+
+                <span
+                    class="task-text
+                    ${task.completed
+                        ? "task-complete"
+                        : ""}">
+
+                    ${escapeHTML(task.text)}
+
+                </span>
+
+                <button
+                    class="action-btn delete-btn"
+                    onclick="deleteTask(${index})">
+
+                    Delete
+
+                </button>
+
+            `;
+
+
+            list.appendChild(li);
+
+        }
+    );
+
+
+    const pending =
+        tasks.filter(
+            task =>
+                !task.completed
+        ).length;
+
+
+    document.getElementById(
+        "taskCount"
+    ).innerText =
+        pending;
+
+}
+
+
+function addTask() {
+
+    const input =
+        document.getElementById(
+            "taskInput"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        showNotification(
+            "⚠️ Enter a task first."
+        );
+
+        return;
+
+    }
+
+
+    tasks.push({
+
+        text: text,
+
+        completed: false
+
+    });
+
+
+    localStorage.setItem(
+        "studentHubTasks",
+        JSON.stringify(tasks)
+    );
+
+
+    input.value = "";
+
+    displayTasks();
+
+
+    showNotification(
+        "✅ Task added!"
+    );
+
+}
+
+
+function toggleTask(index) {
+
+    tasks[index].completed =
+        !tasks[index].completed;
+
+
+    localStorage.setItem(
+        "studentHubTasks",
+        JSON.stringify(tasks)
+    );
+
+
+    displayTasks();
+
+}
+
+
+function deleteTask(index) {
+
+    tasks.splice(index, 1);
+
+
+    localStorage.setItem(
+        "studentHubTasks",
+        JSON.stringify(tasks)
+    );
+
+
+    displayTasks();
+
+
+    showNotification(
+        "🗑️ Task deleted!"
+    );
+
+}
+
+
+document
+    .getElementById("taskInput")
+    .addEventListener(
+        "keypress",
+        function(event) {
+
+            if (
+                event.key === "Enter"
+            ) {
+
+                addTask();
+
+            }
+
+        }
+    );
+
+
+displayTasks();
+
+
+/* =====================================================
+   SGPA
+===================================================== */
+
+function addGradeRow() {
+
+    const container =
+        document.getElementById(
+            "gradeRows"
+        );
+
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "grade-row";
+
+
+    row.innerHTML = `
+
+        <input placeholder="Subject">
+
+        <input
+            class="credit"
+            type="number"
+            placeholder="Credit"
+            min="0">
+
+        <input
+            class="grade"
+            type="number"
+            placeholder="Grade Point"
+            min="0"
+            max="10">
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+function calculateSGPA() {
+
+    const credits =
+        document.querySelectorAll(
+            ".credit"
+        );
+
+
+    const grades =
+        document.querySelectorAll(
+            ".grade"
+        );
+
+
+    let totalCredits = 0;
+
+    let weightedPoints = 0;
+
+
+    for (
+        let i = 0;
+        i < credits.length;
+        i++
+    ) {
+
+        const credit =
+            Number(
+                credits[i].value
+            );
+
+
+        const grade =
+            Number(
+                grades[i].value
+            );
+
+
+        if (
+            credit > 0 &&
+            grade >= 0 &&
+            grade <= 10
+        ) {
+
+            totalCredits +=
+                credit;
+
+            weightedPoints +=
+                credit *
+                grade;
+
+        }
+
+    }
+
+
+    if (
+        totalCredits === 0
+    ) {
+
+        document.getElementById(
+            "sgpaResult"
+        ).innerText =
+            "SGPA: Enter valid data.";
+
+        return;
+
+    }
+
+
+    const sgpa =
+        weightedPoints /
+        totalCredits;
+
+
+    document.getElementById(
+        "sgpaResult"
+    ).innerText =
+        "SGPA: "
+        +
+        sgpa.toFixed(2);
+
+
+    showNotification(
+        "🎯 SGPA calculated!"
+    );
+
+}
+
+
+/* =====================================================
+   CGPA
+===================================================== */
+
+function addSemesterRow() {
+
+    const container =
+        document.getElementById(
+            "semesterRows"
+        );
+
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "semester-row";
+
+
+    row.innerHTML = `
+
+        <input
+            type="number"
+            placeholder="Sem">
+
+        <input
+            type="number"
+            class="semSGPA"
+            placeholder="SGPA"
+            min="0"
+            max="10">
+
+        <input
+            type="number"
+            class="semCredits"
+            placeholder="Credits"
+            min="0">
+
+    `;
+
+
+    container.appendChild(row);
+
+}
+
+
+function calculateCGPA() {
+
+    const sgpas =
+        document.querySelectorAll(
+            ".semSGPA"
+        );
+
+
+    const credits =
+        document.querySelectorAll(
+            ".semCredits"
+        );
+
+
+    let totalCredits = 0;
+
+    let weightedSGPA = 0;
+
+
+    for (
+        let i = 0;
+        i < sgpas.length;
+        i++
+    ) {
+
+        const sgpa =
+            Number(
+                sgpas[i].value
+            );
+
+
+        const credit =
+            Number(
+                credits[i].value
+            );
+
+
+        if (
+            sgpa >= 0 &&
+            sgpa <= 10 &&
+            credit > 0
+        ) {
+
+            weightedSGPA +=
+                sgpa *
+                credit;
+
+            totalCredits +=
+                credit;
+
+        }
+
+    }
+
+
+    if (
+        totalCredits === 0
+    ) {
+
+        document.getElementById(
+            "cgpaResult"
+        ).innerText =
+            "CGPA: Enter valid data.";
+
+        return;
+
+    }
+
+
+    const cgpa =
+        weightedSGPA /
+        totalCredits;
+
+
+    document.getElementById(
+        "cgpaResult"
+    ).innerText =
+        "CGPA: "
+        +
+        cgpa.toFixed(2);
+
+
+    document.getElementById(
+        "dashboardCGPA"
+    ).innerText =
+        cgpa.toFixed(2);
+
+
+    showNotification(
+        "🏆 CGPA calculated!"
+    );
+
+}
+
+
+/* =====================================================
+   EXAM COUNTDOWN
+===================================================== */
+
+let exams =
+    JSON.parse(
+        localStorage.getItem(
+            "studentHubExams"
+        )
+    ) || [];
+
+
+let activeExam = null;
+
+
+function addExam() {
+
+    const name =
+        document.getElementById(
+            "examName"
+        ).value.trim();
+
+
+    const date =
+        document.getElementById(
+            "examDate"
+        ).value;
+
+
+    const time =
+        document.getElementById(
+            "examTime"
+        ).value;
+
+
+    if (
+        !name ||
+        !date ||
+        !time
+    ) {
+
+        showNotification(
+            "⚠️ Please enter exam name, date and time."
+        );
+
+        return;
+
+    }
+
+
+    const examDateTime =
+        new Date(
+            date +
+            "T" +
+            time
+        ).getTime();
+
+
+    if (
+        examDateTime <=
+        Date.now()
+    ) {
+
+        showNotification(
+            "⚠️ Please select a future exam date."
+        );
+
+        return;
+
+    }
+
+
+    exams.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        date: date,
+
+        time: time,
+
+        timestamp:
+            examDateTime
+
+    });
+
+
+    saveExams();
+
+
+    document.getElementById(
+        "examName"
+    ).value = "";
+
+    document.getElementById(
+        "examDate"
+    ).value = "";
+
+    document.getElementById(
+        "examTime"
+    ).value = "";
+
+
+    showNotification(
+        "⏳ Exam countdown started!"
+    );
+
+}
+
+
+function saveExams() {
+
+    localStorage.setItem(
+        "studentHubExams",
+        JSON.stringify(exams)
+    );
+
+
+    displayExams();
+
+    selectNearestExam();
+
+}
+
+
+function displayExams() {
+
+    const list =
+        document.getElementById(
+            "examList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    const upcoming =
+        exams
+        .filter(
+            exam =>
+                exam.timestamp >
+                Date.now()
+        )
+        .sort(
+            (a,b) =>
+                a.timestamp -
+                b.timestamp
+        );
+
+
+    if (
+        upcoming.length === 0
+    ) {
+
+        list.innerHTML = `
+
+            <div
+                style="color:#64748b;
+                font-size:13px;">
+
+                📅 No upcoming exams.
+                Add your first exam above.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    upcoming.forEach(
+        function(exam) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "exam-item";
+
+
+            const formattedDate =
+                new Date(
+                    exam.timestamp
+                ).toLocaleString();
+
+
+            item.innerHTML = `
+
+                <h3>
+                    ${escapeHTML(
+                        exam.name
+                    )}
+                </h3>
+
+                <p>
+                    📅 ${formattedDate}
+                </p>
+
+                <button
+                    onclick="deleteExam(${exam.id})">
+
+                    🗑️ Delete
+
+                </button>
+
+            `;
+
+
+            list.appendChild(item);
+
+        }
+    );
+
+}
+
+
+function deleteExam(id) {
+
+    exams =
+        exams.filter(
+            exam =>
+                exam.id !== id
+        );
+
+
+    saveExams();
+
+
+    showNotification(
+        "🗑️ Exam deleted."
+    );
+
+}
+
+
+function selectNearestExam() {
+
+    const upcoming =
+        exams
+        .filter(
+            exam =>
+                exam.timestamp >
+                Date.now()
+        )
+        .sort(
+            (a,b) =>
+                a.timestamp -
+                b.timestamp
+        );
+
+
+    if (
+        upcoming.length === 0
+    ) {
+
+        activeExam = null;
+
+
+        document.getElementById(
+            "activeExamSection"
+        ).style.display =
+            "none";
+
+
+        return;
+
+    }
+
+
+    activeExam =
+        upcoming[0];
+
+
+    document.getElementById(
+        "activeExamSection"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "activeExamTitle"
+    ).innerText =
+        "⏳ Countdown: "
+        +
+        activeExam.name;
+
+
+    updateCountdown();
+
+}
+
+
+function updateCountdown() {
+
+    if (!activeExam) return;
+
+
+    const difference =
+        activeExam.timestamp -
+        Date.now();
+
+
+    if (
+        difference <= 0
+    ) {
+
+        selectNearestExam();
+
+        return;
+
+    }
+
+
+    const days =
+        Math.floor(
+            difference /
+            (
+                1000 *
+                60 *
+                60 *
+                24
+            )
+        );
+
+
+    const hours =
+        Math.floor(
+            (
+                difference %
+                (
+                    1000 *
+                    60 *
+                    60 *
+                    24
+                )
+            )
+            /
+            (
+                1000 *
+                60 *
+                60
+            )
+        );
+
+
+    const minutes =
+        Math.floor(
+            (
+                difference %
+                (
+                    1000 *
+                    60 *
+                    60
+                )
+            )
+            /
+            (
+                1000 *
+                60
+            )
+        );
+
+
+    const seconds =
+        Math.floor(
+            (
+                difference %
+                (
+                    1000 *
+                    60
+                )
+            )
+            /
+            1000
+        );
+
+
+    document.getElementById(
+        "days"
+    ).innerText =
+        String(days)
+        .padStart(2,"0");
+
+
+    document.getElementById(
+        "hours"
+    ).innerText =
+        String(hours)
+        .padStart(2,"0");
+
+
+    document.getElementById(
+        "minutes"
+    ).innerText =
+        String(minutes)
+        .padStart(2,"0");
+
+
+    document.getElementById(
+        "seconds"
+    ).innerText =
+        String(seconds)
+        .padStart(2,"0");
+
+}
+
+
+displayExams();
+
+selectNearestExam();
+
+setInterval(
+    updateCountdown,
+    1000
+);
+
+
+/* =====================================================
+   GREETING
+===================================================== */
+
+const hour =
+    new Date().getHours();
+
+
+if (hour < 12) {
+
+    document.getElementById(
+        "welcome"
+    ).innerText =
+        "Good morning 👋";
+
+}
+
+else if (hour < 18) {
+
+    document.getElementById(
+        "welcome"
+    ).innerText =
+        "Good afternoon 👋";
+
+}
+
+else {
+
+    document.getElementById(
+        "welcome"
+    ).innerText =
+        "Good evening 👋";
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+const links =
+    document.querySelectorAll(
+        "nav a"
+    );
+
+
+links.forEach(
+    function(link) {
+
+        link.addEventListener(
+            "click",
+            function() {
+
+                links.forEach(
+                    function(item) {
+
+                        item.classList.remove(
+                            "active"
+                        );
+
+                    }
+                );
+
+
+                this.classList.add(
+                    "active"
+                );
+
+            }
+        );
+
+    }
+);
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeProfile();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
